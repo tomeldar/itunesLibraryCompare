@@ -1,6 +1,6 @@
 const xmlConverter = require('./XMLtoJSON');
 
-async function comparePlaylists(library, sourcePlaylist, targetPlaylist) {
+async function comparePlaylists(library, sourcePlaylist, targetPlaylist, filter = []) {
     const data = await xmlConverter(library);
     const sourceKeys = await getPlaylistSongKeys(sourcePlaylist, data);
     const targetKeys = await getPlaylistSongKeys(targetPlaylist, data);
@@ -12,7 +12,7 @@ async function comparePlaylists(library, sourcePlaylist, targetPlaylist) {
         }
     }
 
-    const result = await getSongData(keyDict, data);
+    const result = await getSongData(keyDict, data, filter);
     return result;
 }
 
@@ -31,12 +31,12 @@ function getPlaylistSongKeys(playlistName, data) {
     return playlistData;
 }
 
-function getSongData(songKeys, data) {
+function getSongData(songKeys, data, filter) {
     let songData = [];
     const songs = data.plist.dict[0].dict[0].dict;
 
     songs.forEach(song => {
-        if (songKeys[song.integer[0]])
+        if (songKeys[song.integer[0]] && (filter.length === 0 || filter.includes(song.string[1].charAt(0).toLowerCase())))
             songData.push({name: song.string[0], artist: song.string[1]});
     });
 

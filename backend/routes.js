@@ -13,7 +13,7 @@ router.use((req, res, next) => {
 
 // define the home page route
 router.get('/', async (req, res) => {
-    const result = await comparePlaylists(req.body.libraryPath, req.body.sourcePlaylist, req.body.targetPlaylist);
+    const result = await comparePlaylists(req.body.libraryPath, req.body.sourcePlaylist, req.body.targetPlaylist, req.body.filter);
     res.send(result);
 });
 
